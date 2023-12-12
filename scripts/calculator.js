@@ -1,0 +1,1 @@
+let calculator = new CalcController(); //ao instanciar um objeto, automaticamente é chamado o método Construtor da Classe
