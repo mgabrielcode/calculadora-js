@@ -16,7 +16,6 @@ class CalcController {
         this.initButtonsEvents();
     }
 
-
     // Métodos da minha classe
     initialize(){ // método que mostra a hora e data atualizados
         this.setDisplayDateTime();
@@ -35,6 +34,8 @@ class CalcController {
 
     clearAll(){
         this._operation = [];
+        this._lastNumber = '';
+        this._lastOperator = '';
         this.setLastNumberToDisplay();
     }
 
@@ -65,7 +66,7 @@ class CalcController {
         this._lastOperator = this.getLastItem();
 
         if(this._operation.length < 3){
-            let firstItem = this_operation[0];
+            let firstItem = this._operation[0];
             this._operation = [firstItem, this._lastOperator, this._lastNumber];
         }
 
@@ -125,8 +126,6 @@ class CalcController {
         if(isNaN(this.getLastOperation())){
             if(this.isOperator(value)){
                 this.setLastOperation(value);
-            } else if (isNaN(value)){
-                console.log('Outra coisa', value);
             } else {
                 this.pushOperation(value);
                 this.setLastNumberToDisplay();
@@ -138,7 +137,7 @@ class CalcController {
                 this.pushOperation(value);
             } else {
                 let newValue = this.getLastOperation().toString() + value.toString();
-                this.setLastOperation(parseInt(newValue));
+                this.setLastOperation(newValue);
                 this.setLastNumberToDisplay();
             }
         }
@@ -146,6 +145,17 @@ class CalcController {
 
     setError(){
         this.displayCalc = "Error";
+    }
+
+    addDot(){
+        let lastOperation = this.getLastOperation();
+        if(typeof lastOperation === 'string' && lastOperation.split('').indexOf('.') > -1) return;
+
+        if(this.isOperator(lastOperation) || !lastOperation) {
+            this.pushOperation('0.');
+        } else {
+            this.setLastOperation(lastOperation.toString() + '.');           
+        }
     }
 
     execBtn(value){
@@ -184,7 +194,7 @@ class CalcController {
                 break;
 
             case 'ponto':
-                this.addOperation('.');
+                this.addDot();
                 break;
 
             case '0':
